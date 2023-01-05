@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 
 namespace BottomlessIntegerNSA
 {
@@ -134,7 +135,7 @@ namespace BottomlessIntegerNSA
             placeNum = (ShallowInteger)((int)final);
         }
 
-        public DeepInteger(ZeroesHolder zeroes, DeepInteger numbers)
+        private DeepInteger(ZeroesHolder zeroes, DeepInteger numbers)
         {
             bool addZero = !(zeroes is null) && zeroes.Zero > -1;
 
