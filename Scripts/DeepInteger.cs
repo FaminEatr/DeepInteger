@@ -890,12 +890,10 @@ namespace BottomlessIntegerNSA
                     DeepInteger newA = new DeepInteger(a);
                     DeepInteger newB = new DeepInteger(b);
 
-                    newB._multiply(a, ref result);
+                    newB._multiply(newA, ref result);
                 }
                 else
                 {
-                    //if (b.AbsoluteGreaterThan(a, out bool nextIsEqual))
-                    //{
                     b._multiply(a, ref result);
 
                     if (a.isNegative && !b.isNegative)
@@ -906,20 +904,6 @@ namespace BottomlessIntegerNSA
                     {
                         result.isNegative = false;
                     }
-                    //}
-                    //else
-                    //{
-                    //    result = a._multiply(b);
-
-                    //    if (!a.isNegative && b.isNegative)
-                    //    {
-                    //        result.isNegative = true;
-                    //    }
-                    //    else if (a.isNegative && b.isNegative)
-                    //    {
-                    //        result.isNegative = false;
-                    //    }
-                    //}
                 }
 
                 return result;
@@ -937,8 +921,10 @@ namespace BottomlessIntegerNSA
 
                 if (!(a is null) && !(b is null))
                 {
+                    DeepInteger newA = new DeepInteger(a);
+                    DeepInteger newB = new DeepInteger(b);
                     result = new DeepInteger(0);
-                    a._multiply(b, ref result);
+                    newA._multiply(newB, ref result);
                 }
                 else
                 {
