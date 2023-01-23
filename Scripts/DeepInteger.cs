@@ -876,8 +876,6 @@ namespace BottomlessIntegerNSA
             return result;
         }
 
-
-
         public static DeepInteger Multiply(DeepInteger a, DeepInteger b)
         {
             DeepInteger result = new DeepInteger(0);
