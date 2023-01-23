@@ -471,20 +471,26 @@ namespace BottomlessIntegerNSA
             return result;
         }
 
-        private DeepInteger _multiply(DeepInteger b, int remainder = 0)
+        private DeepInteger _multiply(DeepInteger b, ref DeepInteger finalResult, int remainder = 0)
         {
-            DeepInteger finalResult = new DeepInteger();
+            if (finalResult is null)
+            {
+                finalResult = new DeepInteger(0);
+            }
+
+            DeepInteger newThis = new DeepInteger(this);
 
             if (!(b is null))
             {
-                DeepInteger otherNext = b;
+                DeepInteger otherNext = new DeepInteger(b);
                 bool advanceOther = true;
                 ZeroesHolder holder = new ZeroesHolder();
 
                 while (advanceOther)
                 {
+                    DeepInteger result = new DeepInteger(newThis);
+
                     // First make the multiplication
-                    DeepInteger result = new DeepInteger(this);
                     result.MultiplyDepthBy((int)otherNext.placeNum);
 
                     // Add any zeroes for place
@@ -872,17 +878,25 @@ namespace BottomlessIntegerNSA
 
         public static DeepInteger Multiply(DeepInteger a, DeepInteger b)
         {
-            DeepInteger result;
-
-            if (a.Equals(0) || b.Equals(0))
+            DeepInteger result = new DeepInteger(0);
+            try
             {
-                result = new DeepInteger(0);
-            }
-            else
-            {
-                if (b.AbsoluteGreaterThan(a, out bool nextIsEqual))
+                if (a.Equals(0) || b.Equals(0))
                 {
-                    result = b._multiply(a);
+                    result = new DeepInteger(0);
+                }
+                else if (a.Equals(b))
+                {
+                    DeepInteger newA = new DeepInteger(a);
+                    DeepInteger newB = new DeepInteger(b);
+
+                    newB._multiply(a, ref result);
+                }
+                else
+                {
+                    //if (b.AbsoluteGreaterThan(a, out bool nextIsEqual))
+                    //{
+                    b._multiply(a, ref result);
 
                     if (a.isNegative && !b.isNegative)
                     {
@@ -892,22 +906,45 @@ namespace BottomlessIntegerNSA
                     {
                         result.isNegative = false;
                     }
+                    //}
+                    //else
+                    //{
+                    //    result = a._multiply(b);
+
+                    //    if (!a.isNegative && b.isNegative)
+                    //    {
+                    //        result.isNegative = true;
+                    //    }
+                    //    else if (a.isNegative && b.isNegative)
+                    //    {
+                    //        result.isNegative = false;
+                    //    }
+                    //}
+                }
+
+                return result;
+            }
+            catch (NullReferenceException ex)
+            {
+                Console.WriteLine();
+                Console.WriteLine();
+                Console.WriteLine();
+                Console.WriteLine("ERROR THROWN IN MULTIPLY FUNCTION");
+                Console.WriteLine(!(a is null) ? a.ToString() : "a is null");
+                Console.WriteLine(!(b is null) ? a.ToString() : "b is null");
+                Console.WriteLine(!(result is null) ? a.ToString() : "finalResult is null");
+                Console.WriteLine(ex.Message);
+
+                if (!(a is null) && !(b is null))
+                {
+                    result = new DeepInteger(0);
+                    a._multiply(b, ref result);
                 }
                 else
                 {
-                    result = a._multiply(b);
-
-                    if (!a.isNegative && b.isNegative)
-                    {
-                        result.isNegative = true;
-                    }
-                    else if (a.isNegative && b.isNegative)
-                    {
-                        result.isNegative = false;
-                    }
+                    throw new Exception(ex.Message);
                 }
             }
-
             return result;
         }
 
@@ -918,7 +955,7 @@ namespace BottomlessIntegerNSA
                 throw new DivideByZeroException();
             }
 
-            DeepInteger result;
+            DeepInteger result = new DeepInteger();
 
             if (!a.isNegative && !b.isNegative)
             {
@@ -933,19 +970,19 @@ namespace BottomlessIntegerNSA
             }
             else if (a.isNegative && b.isNegative)
             {
-                result = a._multiply(b);
+                a._multiply(b, ref result);
                 result.isNegative = false;
             }
             else
             {
                 if (a.AbsoluteGreaterThan(b, out bool nIE))
                 {
-                    result = a._multiply(b);
+                    a._multiply(b, ref result);
                     result.isNegative = true;
                 }
                 else
                 {
-                    result = b._multiply(a);
+                    b._multiply(a, ref result);
                     result.isNegative = true;
                 }
             }
@@ -1066,7 +1103,7 @@ namespace BottomlessIntegerNSA
                 throw new DivideByZeroException();
             }
 
-            DeepInteger result;
+            DeepInteger result = new DeepInteger();
             remainder = new DeepInteger(0);
 
             if (!a.isNegative && !b.isNegative)
@@ -1082,19 +1119,19 @@ namespace BottomlessIntegerNSA
             }
             else if (a.isNegative && b.isNegative)
             {
-                result = a._multiply(b);
+                a._multiply(b, ref result);
                 result.isNegative = false;
             }
             else
             {
                 if (a.AbsoluteGreaterThan(b, out bool nIE))
                 {
-                    result = a._multiply(b);
+                    a._multiply(b, ref result);
                     result.isNegative = true;
                 }
                 else
                 {
-                    result = b._multiply(a);
+                    b._multiply(a, ref result);
                     result.isNegative = true;
                 }
             }
