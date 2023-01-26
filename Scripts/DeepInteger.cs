@@ -879,56 +879,54 @@ namespace BottomlessIntegerNSA
         public static DeepInteger Multiply(DeepInteger a, DeepInteger b)
         {
             DeepInteger result = new DeepInteger(0);
-            try
+            if(!a.Equals(0) && !b.Equals(0))
             {
-                if (a.Equals(0) || b.Equals(0))
+                try
                 {
-                    result = new DeepInteger(0);
-                }
-                else if (a.Equals(b))
-                {
-                    DeepInteger newA = new DeepInteger(a);
-                    DeepInteger newB = new DeepInteger(b);
+                    if (a.Equals(b))
+                    {
+                        DeepInteger newA = new DeepInteger(a);
+                        DeepInteger newB = new DeepInteger(b);
 
-                    newB._multiply(newA, ref result);
+                        newB._multiply(newA, ref result);
+                    }
+                    else
+                    {
+                        b._multiply(a, ref result);
+                    }
+                }
+                catch (NullReferenceException ex)
+                {
+                    Console.WriteLine();
+                    Console.WriteLine();
+                    Console.WriteLine();
+                    Console.WriteLine("ERROR THROWN IN MULTIPLY FUNCTION");
+                    Console.WriteLine(!(a is null) ? a.ToString() : "a is null");
+                    Console.WriteLine(!(b is null) ? a.ToString() : "b is null");
+                    Console.WriteLine(!(result is null) ? a.ToString() : "finalResult is null");
+                    Console.WriteLine(ex.Message);
+
+                    if (!(a is null) && !(b is null))
+                    {
+                        DeepInteger newA = new DeepInteger(a);
+                        DeepInteger newB = new DeepInteger(b);
+                        result = new DeepInteger(0);
+                        newA._multiply(newB, ref result);
+                    }
+                    else
+                    {
+                        throw new Exception(ex.Message);
+                    }
+                }
+
+                if ((a.isNegative && !b.isNegative) ||
+                    (!a.isNegative && b.isNegative))
+                {
+                    result.isNegative = true;
                 }
                 else
                 {
-                    b._multiply(a, ref result);
-
-                    if (a.isNegative && !b.isNegative)
-                    {
-                        result.isNegative = true;
-                    }
-                    else if (a.isNegative && b.isNegative)
-                    {
-                        result.isNegative = false;
-                    }
-                }
-
-                return result;
-            }
-            catch (NullReferenceException ex)
-            {
-                Console.WriteLine();
-                Console.WriteLine();
-                Console.WriteLine();
-                Console.WriteLine("ERROR THROWN IN MULTIPLY FUNCTION");
-                Console.WriteLine(!(a is null) ? a.ToString() : "a is null");
-                Console.WriteLine(!(b is null) ? a.ToString() : "b is null");
-                Console.WriteLine(!(result is null) ? a.ToString() : "finalResult is null");
-                Console.WriteLine(ex.Message);
-
-                if (!(a is null) && !(b is null))
-                {
-                    DeepInteger newA = new DeepInteger(a);
-                    DeepInteger newB = new DeepInteger(b);
-                    result = new DeepInteger(0);
-                    newA._multiply(newB, ref result);
-                }
-                else
-                {
-                    throw new Exception(ex.Message);
+                    result.isNegative = false;
                 }
             }
             return result;
